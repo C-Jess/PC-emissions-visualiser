@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calculate</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/webservicedemo.js"></script>
+    <script src="Scripts/modernizr-2.6.2.js"></script>
+    <script src="/Scripts/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="./Content/index.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCns3-aGYsC5mOtKE3kJpF5nQeAcFh-FU"></script>
+  </head>
+
+  <body>
+    <h1>Calculate how much CO2 you emit by using your PC</h1>
+    <form id="form" action="" onsubmit="calculate(event)">
+      <div class="forminput">
+        <label for="wattage">Total Wattage of Components</label>
+        <div class="tooltip">
+          ?
+          <span class="tooltiptext"
+            >Add up the wattage of components like CPU and GPU.</span
+          >
+        </div>
+        <br />
+        <input type="number" id="wattage" name="wattage" min="0" required />
+        W<br />
+      </div>
+
+      <div class="forminput">
+        <label for="green">Green Energy %</label>
+        <div class="tooltip">
+          ?
+          <span class="tooltiptext"
+            >If you are on a green energy tarrif enter the percentage
+            here.</span
+          >
+        </div>
+        <br />
+        <input type="range" id="green" name="green" value="0" required />
+        <input
+          class="range"
+          type="number"
+          id="greenNumber"
+          name="greenNumber"
+          value="0"
+          min="0"
+          max="100"
+        /><br />
+      </div>
+
+      <div class="forminput">
+        <label for="time_on">Time on</label>
+        <div class="tooltip">
+          ?
+          <span class="tooltiptext">Averge time your PC is on each day</span>
+        </div>
+        <br />
+        <input
+          type="number"
+          id="time_on"
+          name="time_on"
+          min="0"
+          max="24"
+          required
+        />
+        h per day<br />
+      </div>
+
+      <div class="forminput">
+        <label for="time_game">Time Gaming</label>
+        <div class="tooltip">
+          ?
+          <span class="tooltiptext"
+            >Average time your PC is running games or other intensive tasks like
+            rendering.</span
+          >
+        </div>
+        <br />
+        <input
+          type="number"
+          id="time_game"
+          name="time_game"
+          min="0"
+          max="24"
+          required
+        />
+        h per day<br />
+      </div>
+
+      <div class="forminput">
+        <label for="country">Country</label><br />
+        <select
+          id="country"
+          name="country"
+          onchange="addYearOptions(event);"
+          required
+        ></select>
+        <br />
+      </div>
+      <div class="forminput" id="year"></div>
+      <br />
+      <input id="submit" type="submit" name="submit" value="Submit" />
+    </form>
+    <br />
+    <div hidden="true" id="result"></div>
+    <div id="map"></div>
+  </body>
+  <script>
+    getAllCountries().then(function (countries) {
+      var options = `<option disabled selected hidden value="">Select Country...</option>`;
+      for (var country of countries) {
+        options += `<option value=${country.CountryID}>${country.Country}</option>`;
+      }
+      document.getElementById("country").innerHTML = options;
+    });
+
+    var range = document.getElementById("green");
+    var number = document.getElementById("greenNumber");
+    range.addEventListener("input", function (e) {
+      number.value = e.target.value;
+    });
+    number.addEventListener("input", function (e) {
+      range.value = e.target.value;
+    });
+
+    var timeOn = $("#time_on");
+    var timeGame = $("#time_game");
+    timeOn.change((e) => {
+      timeGame.attr({ max: e.target.value });
+    });
+    timeGame.change((e) => {
+      timeOn.attr({ min: e.target.value });
+    });
+
+    function addYearOptions(event) {
+      getCarbonIntensity(event.target.value).then((data) => {
+        var carbonIntensity = data.CarbonIntensity;
+        var yearOptions = `<label for="year">Year</label><br>
+      <select id="year" name="year" required>
+      <option disabled selected hidden value="">Select Year...</option>`;
+        for (var year in carbonIntensity) {
+          yearOptions += `<option value=${carbonIntensity[year]}>${year}</option>`;
+        }
+        yearOptions += `</select><br>`;
+        document.getElementById("year").innerHTML = yearOptions;
+      });
+    }
+  </script>
+</html>
