@@ -22,7 +22,7 @@ class CarbonIntensityRestService extends RestService
 				// the default will be used (which is text/html).
 				header('Content-Type: application/json; charset=utf-8');
 				// This header is needed to stop IE cacheing the results of the GET	
-				header('no-cache,no-store');
+				header('Cache-Control: no-cache, no-store');
 				$this->getAllCountries();
 				echo json_encode($this->countries);
 				break;
@@ -32,7 +32,7 @@ class CarbonIntensityRestService extends RestService
 				$carbonIntensity = $this->getCarbonIntensity($id);
 				if ($carbonIntensity != null) {
 					header('Content-Type: application/json; charset=utf-8');
-					header('no-cache,no-store');
+					header('Cache-Control: no-cache, no-store');
 					echo json_encode($carbonIntensity);
 				} else {
 					$this->notFoundResponse();
