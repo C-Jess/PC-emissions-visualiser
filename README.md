@@ -1,9 +1,9 @@
-# PC Emmissions Visualiser
+# PC Emissions Visualiser
 
 <table>
 <tr>
 <td>
-PC Emmissions Visualiser is a website to visualise estimated CO2 emissions from PC usage as the distance travelled by an average car, accessing country-specific electricity emissions data to display for a selected country and year.
+PC Emissions Visualiser is a website to visualise estimated CO2 emissions from PC usage as the distance travelled by an average car, accessing country-specific electricity emissions data to display for a selected country and year.
 </td>
 </tr>
 </table>
